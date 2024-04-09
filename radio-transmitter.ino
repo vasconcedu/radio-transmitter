@@ -102,11 +102,11 @@ void blinkStandBy() {
 }
 
 void blinkReady() {
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 5; i++) {
     digitalWrite(led, LOW);
-    delay(100);
+    delay(50);
     digitalWrite(led, HIGH);
-    delay(100);
+    delay(50);
   }
 }
 
