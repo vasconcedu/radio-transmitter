@@ -1,3 +1,8 @@
+#include <RF24.h>
+#include <RF24_config.h>
+#include <nRF24L01.h>
+#include <printf.h>
+
 #include "Pad.hpp"
 #include "Throttle.hpp"
 
@@ -31,13 +36,29 @@ Throttle throttle = Throttle(A4);
 // Indicator LED
 uint8_t led = 6;
 
+// Transmitter radio
+RF24 radio(8, 7);
+uint8_t address[6] = "wolf0";
+int radioBuffer[9] = {
+  -1, -1, -1, 
+  -1, -1, -1, 
+  -1, -1, -1
+};
+
 void setup() {
   // [begin] toggle comment for debugging
   Serial.begin(9600);
   // [end]
 
+  // Indicator LED setup 
   pinMode(led, OUTPUT);
   digitalWrite(led, HIGH);
+
+  // Radio setup 
+  radio.begin();
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_HIGH);
+  radio.stopListening();
 }
 
 void loop() {
@@ -82,14 +103,38 @@ void loop() {
         2. Transmit the buffer to the receiver
     */
 
+    // Read controller state to radio buffer 
+    readDPad();
+    readBPad();
+    readThrottle();
+
+    // Transmit radio buffer to receiver 
+    radio.write(&radioBuffer, sizeof(radioBuffer)); // TODO test this line 
+
     // [begin] toggle comment for debugging
     logState();
     // This prevents flooding the serial monitor 
     delay(1000);
     // [end]
-
-    // TODO add firware code here
   }
+}
+
+void readDPad() {
+  radioBuffer[0] = dPad.getUpper();
+  radioBuffer[1] = dPad.getLeft();
+  radioBuffer[2] = dPad.getLower();
+  radioBuffer[3] = dPad.getRight();
+}
+
+void readBPad() {
+  radioBuffer[4] = bPad.getUpper();
+  radioBuffer[5] = bPad.getLeft();
+  radioBuffer[6] = bPad.getLower();
+  radioBuffer[7] = bPad.getRight();
+}
+
+void readThrottle() {
+  radioBuffer[8] = throttle.getAnalog();
 }
 
 void blinkStandBy() {
@@ -138,6 +183,16 @@ void logState() {
   // Throttle state
   Serial.print("\nThrottle analog: ");
   Serial.println(throttle.getAnalog());
+
+  // Radio buffer 
+  Serial.println("\nRadio buffer:");
+  Serial.println("* READINGS MAY DIFFER TRANSITORILY FROM THE ONES ABOVE *");
+  for (int i = 0; i < 9; i++) {
+    Serial.print("- radioBuffer[");
+    Serial.print(i);
+    Serial.print("]: ");
+    Serial.println(radioBuffer[i]);
+  }
 
   Serial.println("========================");
 }
