@@ -9,22 +9,40 @@ Pad::Pad(uint8_t upper, uint8_t left, uint8_t lower, uint8_t right) {
 
 void Pad::setupPin(pin_t &pin, uint8_t number) {
     pin.number = number;
-    pin.mode = INPUT_PULLUP;
-    pinMode(pin.number, pin.mode);
+    if (number != NULL) {
+        pin.mode = INPUT_PULLUP;
+        pinMode(pin.number, pin.mode);
+    }
 }
 
 int Pad::getUpper() {
-    return digitalRead(upper.number);
+    if (upper.number != NULL) {
+        return digitalRead(upper.number);
+    } else {
+        return -1;
+    }
 }
 
 int Pad::getLeft() {
-    return digitalRead(left.number);
+    if (left.number != NULL) {
+        return digitalRead(left.number);
+    } else {
+        return -1;
+    }
 }
 
 int Pad::getLower() {
-    return digitalRead(lower.number);
+    if (lower.number != NULL) {
+        return digitalRead(lower.number);
+    } else {
+        return -1;
+    }
 }
 
 int Pad::getRight() {
-    return digitalRead(right.number);
+    if (right.number != NULL) {
+        return digitalRead(right.number);
+    } else {
+        return -1;
+    }
 }
