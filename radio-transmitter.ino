@@ -17,11 +17,13 @@
     board used is an Arduino Nano.
 
     The circuit:
-    - TODO 
+    - See radio-transmitter_bb.png
 
     Created 10 April 2024 
     By Eduardo Vasconcelos 
     Modified 14 April 2024
+    By Eduardo Vasconcelos
+    Modified 17 April 2024
     By Eduardo Vasconcelos
 
 */
