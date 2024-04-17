@@ -38,7 +38,7 @@ uint8_t led = 6;
 // Transmitter radio
 RF24 radio(8, 7);
 uint8_t address[6] = "wolf0";
-int radioBuffer[9] = {
+int radioBuffer[6] = {
   -1, -1, -1, 
   -1, -1, -1
 };
@@ -76,11 +76,11 @@ void loop() {
   // Transmit radio buffer to receiver 
   radio.write(&radioBuffer, sizeof(radioBuffer));
 
-  // // [begin] toggle comment for debugging
-  // logState();
-  // // This prevents flooding the serial monitor 
+  // [begin] toggle comment for debugging
+  logState();
+  // This prevents flooding the serial monitor 
   // delay(1000);
-  // // [end]
+  // [end]
 }
 
 void readDPad() {
